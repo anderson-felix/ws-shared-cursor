@@ -1,0 +1,30 @@
+version: '3.7'
+
+networks:
+  app_network:
+
+services:
+  ws-backend:
+    image: ws-backend
+    container_name: ws-backend
+    ports:
+      - 8080:5000
+    restart: always
+    networks:
+      app_network:
+    volumes:
+      - ./:/app
+
+  nginx:
+    image: nginx:stable
+    container_name: ws-nginx
+    ports:
+      - 80:80
+      - 443:443
+    restart: always
+    networks:
+      app_network:
+    volumes:
+      - './nginx/conf.d:/etc/nginx/conf.d:ro'
+      - './certbot/www:/etc/nginx/acme_challenge:ro'
+      - './certbot/certificate:/etc/nginx/certificate:ro'
